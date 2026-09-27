@@ -1,0 +1,9 @@
+# Test-only dependencies. Kept separate from requirements.txt so CI doesn't
+# need to install the heavy, unused-by-the-live-pipeline AutoGen packages
+# (see requirements.txt's own note on this).
+pytest
+
+# finance_helpers.py imports this at module level (used by write_record/
+# fetch_transactions/etc.) so it's required just to import the module, even
+# though the pure compute_* functions under test never call it themselves.
+requests

@@ -1,0 +1,31 @@
+name: Frontend checks
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  lint-typecheck-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - run: npm ci
+      # Non-blocking: this codebase has 111 pre-existing lint errors (mostly
+      # @typescript-eslint/no-explicit-any from before this CI workflow
+      # existed) that a single PR shouldn't have to fix to pass. Still runs
+      # so violations are visible in the log; typecheck and build below are
+      # the real regression gates and do block.
+      - run: npm run lint
+        continue-on-error: true
+      - run: npx tsc --noEmit
+      - run: npm run build

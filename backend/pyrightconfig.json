@@ -1,0 +1,6 @@
+{
+  "include": [".", "agents"],
+  "extraPaths": ["agents"],
+  "pythonVersion": "3.10",
+  "typeCheckingMode": "off"
+}
